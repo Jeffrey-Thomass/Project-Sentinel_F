@@ -3,405 +3,415 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Title changed to reflect it's live -->
-    <title>Sensor Optimization</title>
-    <!-- 1. Tailwind CSS -->
+    <title>Sensor Deployment | Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom spinner animation */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .spinner {
             display: inline-block;
             width: 1rem;
             height: 1rem;
             border: 2px solid rgba(255,255,255,0.3);
             border-radius: 50%;
-            border-top-color: #fff;
+            border-top-color: #38bdf8;
             animation: spin 1s ease-in-out infinite;
+        }
+        /* Glassmorphism & Neon Glows */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6); /* Slate-900 with opacity */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+        }
+        .neon-border {
+            border: 1px solid rgba(34, 211, 238, 0.3); /* Cyan border */
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.1); /* Cyan glow */
+        }
+        .status-optimal {
+            border-left: 4px solid #34d399; /* Emerald */
+            background: linear-gradient(90deg, rgba(6, 78, 59, 0.5) 0%, rgba(15, 23, 42, 0) 100%);
+        }
+        .status-error {
+            border-left: 4px solid #f87171; /* Red */
+            background: linear-gradient(90deg, rgba(127, 29, 29, 0.5) 0%, rgba(15, 23, 42, 0) 100%);
+        }
+        
+        /* Custom Scrollbar for Terminal look */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        body {
+            /* Deep Space / Cyberpunk Background */
+            background-color: #020617;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            color: #f1f5f9;
         }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="font-mono min-h-screen text-sm">
 
-    <div class="container mx-auto p-4 lg:p-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">Sensor Deployment Optimizer</h1>
-        <div class="flex flex-col lg:flex-row gap-8">
+    <div class="container mx-auto p-4 lg:p-6 max-w-7xl">
+        
+        <header class="mb-8 flex flex-col md:flex-row md:items-end justify-between border-b border-slate-800 pb-4">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+                    SENSOR//DEPLOYMENT
+                </h1>
+                <p class="text-slate-500 mt-1 uppercase tracking-widest text-xs">Geospatial Optimization System</p>
+            </div>
+            <div class="mt-4 md:mt-0 text-right">
+                 <div class="text-xs text-slate-500">SYSTEM STATUS</div>
+                 <div class="text-emerald-400 font-bold tracking-widest">ONLINE</div>
+            </div>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-6">
             
-            <!-- --- LEFT COLUMN: CONTROLS (No changes here) --- -->
-            <div class="lg:w-1/3">
-                <form id="controls-form" class="space-y-6 bg-white p-6 rounded-lg shadow-md">
-                    
-                    <!-- 1. Area Parameters -->
-                    <h2 class="text-xl font-semibold">1. Area Parameters</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="width" class="block text-sm font-medium text-gray-700">Area Width</label>
-                            <input type="number" id="width" value="50" min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
-                        </div>
-                        <div>
-                            <label for="height" class="block text-sm font-medium text-gray-700">Area Height</label>
-                            <input type="number" id="height" value="50" min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
-                        </div>
-                    </div>
-                    
-                    <!-- 2. Sensor Parameters -->
-                    <h2 class="text-xl font-semibold">2. Sensor Parameters</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="maxSensors" class="block text-sm font-medium text-gray-700">Max Sensors</label>
-                            <input type="number" id="maxSensors" value="10" min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
-                        </div>
-                        <div>
-                            <label for="sensorRange" class="block text-sm font-medium text-gray-700">Sensor Range</label>
-                            <input type="number" id="sensorRange" value="7" min="1" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
-                        </div>
-                    </div>
+            <div class="lg:w-1/3 space-y-5">
+                
+                <form id="controls-form" class="glass-panel p-5 rounded-lg space-y-6">
                     <div>
-                        <label for="density" class="block text-sm font-medium text-gray-700">Coverage Density (lower=more)</label>
-                        <input type="number" id="density" value="2.0" min="0.1" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+                        <h2 class="text-xs font-bold uppercase text-blue-400 mb-3 border-b border-slate-800 pb-1">Area Parameters</h2>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="group">
+                                <label class="block text-[10px] uppercase text-slate-500 mb-1 group-hover:text-cyan-400 transition-colors">Width (m)</label>
+                                <input type="number" id="width" value="50" class="w-full bg-slate-900/80 border border-slate-700 rounded p-2 text-cyan-50 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all">
+                            </div>
+                            <div class="group">
+                                <label class="block text-[10px] uppercase text-slate-500 mb-1 group-hover:text-cyan-400 transition-colors">Height (m)</label>
+                                <input type="number" id="height" value="50" class="w-full bg-slate-900/80 border border-slate-700 rounded p-2 text-cyan-50 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all">
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- 3. Priority Areas -->
-                    <h2 class="text-xl font-semibold">3. Priority Areas</h2>
-                    <div id="priority-areas-list" class="space-y-2">
-                        <!-- Areas will be dynamically inserted here by JS -->
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 p-3 border rounded-md">
-                        <label class="col-span-1">
-                            <span class="text-sm font-medium text-gray-700">X</span>
-                            <input type="number" id="pa_x" value="25" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
-                        </label>
-                        <label class="col-span-1">
-                            <span class="text-sm font-medium text-gray-700">Y</span>
-                            <input type="number" id="pa_y" value="25" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
-                        </label>
-                        <label class="col-span-1">
-                            <span class="text-sm font-medium text-gray-700">R</span>
-                            <input type="number" id="pa_r" value="5" min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm">
-                        </label>
-                        <button type="button" id="add-area-btn" class="col-span-3 mt-2 w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 text-sm">
-                            Add Priority Area
-                        </button>
+                    <div>
+                        <h2 class="text-xs font-bold uppercase text-blue-400 mb-3 border-b border-slate-800 pb-1">Sensor Specs</h2>
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <div class="group">
+                                <label class="block text-[10px] uppercase text-slate-500 mb-1 group-hover:text-cyan-400 transition-colors">Max Units</label>
+                                <input type="number" id="maxSensors" value="10" class="w-full bg-slate-900/80 border border-slate-700 rounded p-2 text-cyan-50 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none">
+                            </div>
+                            <div class="group">
+                                <label class="block text-[10px] uppercase text-slate-500 mb-1 group-hover:text-cyan-400 transition-colors">Range (m)</label>
+                                <input type="number" id="sensorRange" value="7" step="0.1" class="w-full bg-slate-900/80 border border-slate-700 rounded p-2 text-cyan-50 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none">
+                            </div>
+                        </div>
+                        <div class="group">
+                            <label class="block text-[10px] uppercase text-slate-500 mb-1 group-hover:text-cyan-400 transition-colors">Grid Density (Lower = More Precise)</label>
+                            <input type="number" id="density" value="2.0" step="0.1" class="w-full bg-slate-900/80 border border-slate-700 rounded p-2 text-cyan-50 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none">
+                        </div>
                     </div>
 
-                    <!-- 4. Submit Button -->
-                    <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white py-3 px-4 rounded-md font-semibold shadow-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                        <span id="submit-btn-text">Run Optimization</span>
+                    <div>
+                        <h2 class="text-xs font-bold uppercase text-blue-400 mb-3 border-b border-slate-800 pb-1">Priority Targets</h2>
+                        <div id="priority-areas-list" class="space-y-2 mb-3 max-h-24 overflow-y-auto custom-scrollbar">
+                            </div>
+                        
+                        <div class="bg-slate-900/50 p-2 rounded border border-slate-800">
+                            <div class="grid grid-cols-3 gap-2">
+                                <input type="number" id="pa_x" placeholder="X" value="25" class="bg-slate-800 text-center rounded p-1 text-xs outline-none focus:bg-slate-700 text-white">
+                                <input type="number" id="pa_y" placeholder="Y" value="25" class="bg-slate-800 text-center rounded p-1 text-xs outline-none focus:bg-slate-700 text-white">
+                                <input type="number" id="pa_r" placeholder="R" value="5" class="bg-slate-800 text-center rounded p-1 text-xs outline-none focus:bg-slate-700 text-white">
+                            </div>
+                            <button type="button" id="add-area-btn" class="mt-2 w-full bg-slate-800 hover:bg-slate-700 text-cyan-400 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition-colors">
+                                + Add Target Zone
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-3 rounded shadow-lg shadow-cyan-900/20 flex items-center justify-center gap-3 transition-all active:scale-95 group">
+                        <span id="submit-btn-text" class="font-bold tracking-wider">INITIATE OPTIMIZATION</span>
                         <div id="submit-spinner" class="spinner hidden"></div>
                     </button>
                 </form>
+
+                <div class="glass-panel p-4 rounded-lg flex flex-col h-48">
+                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-2 border-b border-slate-800 pb-1">Deployed Asset Coordinates</h3>
+                    <div id="coordinates-list" class="flex-1 overflow-y-auto custom-scrollbar space-y-1">
+                        <p class="text-slate-600 italic text-xs pt-2">Waiting for deployment data...</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- --- RIGHT COLUMN: VISUALIZATION (No changes here) --- -->
-            <div class="lg:w-2/3">
-                <div class="sticky top-8">
-                    <h2 class="text-xl font-semibold mb-4">Optimization Results</h2>
-                    
-                    <!-- Error Message -->
-                    <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4">
-                        <!-- Error content here -->
+            <div class="lg:w-2/3 flex flex-col gap-5">
+                
+                <div id="result-banner" class="hidden glass-panel p-4 rounded-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                        <h2 id="result-status" class="text-lg font-bold text-white tracking-tight">STATUS</h2>
+                        <p id="result-summary" class="text-slate-400 text-xs mt-1">Summary details...</p>
                     </div>
-                    
-                    <!-- Success Message -->
-                    <div id="success-message" class="hidden bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded-lg mb-4">
-                        <!-- Success content here -->
+                    <div class="text-right hidden md:block">
+                        <div class="text-[10px] uppercase text-slate-500">Coverage Efficiency</div>
+                        <div id="result-metric" class="text-2xl font-mono text-cyan-400">0%</div>
                     </div>
+                </div>
+
+                <div id="viz-container" class="w-full glass-panel rounded-lg p-1 relative neon-border" style="min-height: 400px;">
+                    <div class="absolute inset-0 pointer-events-none border border-cyan-900/30 rounded-lg z-10"></div>
+                    <svg id="viz-svg" class="w-full h-full rounded bg-slate-900/50"></svg>
                     
-                    <!-- Visualization SVG -->
-                    <div id="viz-container" class="w-full h-full p-4 bg-white rounded-lg shadow-inner border border-gray-200">
-                        <svg id="viz-svg" viewBox="0 0 50 50" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
-                            <!-- SVG content will be dynamically inserted here by JS -->
-                        </svg>
+                    <div class="absolute bottom-3 right-3 text-[10px] text-slate-600 font-mono z-20 bg-slate-900/80 px-2 py-1 rounded border border-slate-800">
+                        LIVE_FEED // SCALE 1:1
+                    </div>
+                </div>
+
+                <div class="glass-panel p-4 rounded-lg flex flex-col h-56">
+                    <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-1">
+                        <h3 class="text-[10px] font-bold uppercase tracking-widest text-slate-400">System Log / Terminal</h3>
+                        <span class="flex h-2 w-2 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                        </span>
+                    </div>
+                    <div id="mission-logs" class="flex-1 bg-[#0a0f1c] rounded p-3 overflow-y-auto custom-scrollbar font-mono text-xs leading-relaxed space-y-1 border border-slate-800/50">
+                        <p class="text-slate-600">> System Ready.</p>
+                        <p class="text-slate-600">> Waiting for input...</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 5. JavaScript Application Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- STATE ---
-            let priorityAreas = [
-                { center: [15, 35], radius: 8 },
-                { center: [40, 15], radius: 10 },
-            ];
+            let priorityAreas = [{ center: [15, 35], radius: 8 }, { center: [40, 15], radius: 10 }];
             let isLoading = false;
-            
-            // --- API URL ---
-            // This is the address of your running Flask server
-            const API_URL = 'http://127.0.0.1:5000/api/optimize';
+            const API_URL = '/api/optimize';
 
-            // --- DOM ELEMENTS (No change) ---
-            const form = document.getElementById('controls-form');
-            const submitBtn = document.getElementById('submit-btn');
-            const submitBtnText = document.getElementById('submit-btn-text');
-            const submitSpinner = document.getElementById('submit-spinner');
-            
-            const widthInput = document.getElementById('width');
-            const heightInput = document.getElementById('height');
-            const maxSensorsInput = document.getElementById('maxSensors');
-            const sensorRangeInput = document.getElementById('sensorRange');
-            const densityInput = document.getElementById('density');
-            
-            const priorityAreasList = document.getElementById('priority-areas-list');
-            const addAreaBtn = document.getElementById('add-area-btn');
-            const paXInput = document.getElementById('pa_x');
-            const paYInput = document.getElementById('pa_y');
-            const paRInput = document.getElementById('pa_r');
-            
-            const vizContainer = document.getElementById('viz-container');
-            const vizSvg = document.getElementById('viz-svg');
-            const errorMessage = document.getElementById('error-message');
-            const successMessage = document.getElementById('success-message');
-
-            // --- MOCK DATA (REMOVED) ---
-            // const mockResults = { ... }; // This is no longer needed!
-
-            // --- FUNCTIONS ---
-            
-            /**
-             * Renders the list of priority areas based on the state
-             * (No change in this function)
-             */
-            function renderPriorityAreas() {
-                priorityAreasList.innerHTML = ''; // Clear list
-                if (priorityAreas.length === 0) {
-                    priorityAreasList.innerHTML = '<p class="text-sm text-gray-500 text-center">No priority areas added.</p>';
+            // --- DOM Elements ---
+            const ui = {
+                form: document.getElementById('controls-form'),
+                btn: document.getElementById('submit-btn'),
+                btnText: document.getElementById('submit-btn-text'),
+                spinner: document.getElementById('submit-spinner'),
+                areaList: document.getElementById('priority-areas-list'),
+                svg: document.getElementById('viz-svg'),
+                vizContainer: document.getElementById('viz-container'),
+                logs: document.getElementById('mission-logs'),
+                coords: document.getElementById('coordinates-list'),
+                banner: document.getElementById('result-banner'),
+                status: document.getElementById('result-status'),
+                summary: document.getElementById('result-summary'),
+                metric: document.getElementById('result-metric'),
+                
+                // Inputs
+                inputs: {
+                    w: document.getElementById('width'),
+                    h: document.getElementById('height'),
+                    max: document.getElementById('maxSensors'),
+                    range: document.getElementById('sensorRange'),
+                    dens: document.getElementById('density'),
+                    px: document.getElementById('pa_x'),
+                    py: document.getElementById('pa_y'),
+                    pr: document.getElementById('pa_r')
                 }
-                
+            };
+
+            // --- Functions ---
+
+            function renderPriorityAreas() {
+                ui.areaList.innerHTML = '';
                 priorityAreas.forEach((area, idx) => {
-                    const areaEl = document.createElement('div');
-                    areaEl.className = 'flex items-center justify-between p-2 bg-gray-50 rounded';
-                    areaEl.innerHTML = `
-                        <span class="text-sm">
-                            Area #${idx + 1}: (x: ${area.center[0]}, y: ${area.center[1]}, r: ${area.radius})
-                        </span>
-                        <button type="button" data-index="${idx}" class="remove-area-btn text-red-500 hover:text-red-700 text-sm font-medium">Remove</button>
+                    const el = document.createElement('div');
+                    el.className = 'flex items-center justify-between p-2 bg-slate-800/40 rounded border border-slate-700/50 hover:border-slate-600 transition-colors group';
+                    el.innerHTML = `
+                        <span class="text-[10px] font-mono text-slate-400 group-hover:text-slate-200 transition-colors">ZONE_${String(idx+1).padStart(2,'0')} [${area.center}] R:${area.radius}</span>
+                        <button type="button" data-index="${idx}" class="remove-area-btn text-slate-600 hover:text-red-400 font-bold px-2 transition-colors">×</button>
                     `;
-                    priorityAreasList.appendChild(areaEl);
+                    ui.areaList.appendChild(el);
                 });
-                
-                // Redraw the base visualization (without results)
-                renderVisualization(); 
+                renderVisualization();
             }
 
-            /**
-             * Adds a new priority area from the input fields
-             * (No change in this function)
-             */
-            function handleAddArea() {
-                const x = parseFloat(paXInput.value);
-                const y = parseFloat(paYInput.value);
-                const r = parseFloat(paRInput.value);
+            function appendLog(msg, type='info') {
+                const colors = {
+                    info: 'text-slate-400',
+                    success: 'text-emerald-400',
+                    error: 'text-rose-400',
+                    highlight: 'text-cyan-400'
+                };
+                const time = new Date().toLocaleTimeString('en-US', {hour12:false, hour:'2-digit', minute:'2-digit', second:'2-digit'});
+                const p = document.createElement('div');
+                p.innerHTML = `<span class="text-slate-600 opacity-50 mr-2">[${time}]</span><span class="${colors[type] || colors.info}">${msg}</span>`;
+                ui.logs.appendChild(p);
+                ui.logs.scrollTop = ui.logs.scrollHeight;
+            }
 
-                if (isNaN(x) || isNaN(y) || isNaN(r) || r <= 0) {
-                    showError("Please enter valid X, Y, and a positive Radius.");
+            function updateResultsBanner(result, isError=false) {
+                ui.banner.classList.remove('hidden', 'status-optimal', 'status-error');
+                
+                if (isError) {
+                    ui.banner.classList.add('status-error');
+                    ui.status.innerText = "OPTIMIZATION FAILED";
+                    ui.status.className = "text-lg font-bold text-rose-400";
+                    ui.summary.innerText = result; // Error message
+                    ui.metric.innerText = "ERR";
+                    ui.metric.className = "text-2xl font-mono text-rose-500";
+                } else {
+                    ui.banner.classList.add('status-optimal');
+                    ui.status.innerText = `STATUS: ${result.status}`;
+                    ui.status.className = "text-lg font-bold text-emerald-400";
+                    ui.summary.innerText = result.summary;
+                    
+                    // Calculate quick percentage
+                    const total = result.coveredSubTargets.length + result.uncoveredSubTargets.length;
+                    const pct = total > 0 ? Math.round((result.coveredSubTargets.length / total) * 100) : 0;
+                    ui.metric.innerText = `${pct}%`;
+                    ui.metric.className = "text-2xl font-mono text-emerald-400";
+                }
+            }
+
+            function updateCoordsList(sensors) {
+                ui.coords.innerHTML = '';
+                if (!sensors || sensors.length === 0) {
+                    ui.coords.innerHTML = '<p class="text-slate-600 italic text-xs">No sensors deployed.</p>';
                     return;
                 }
-                
-                priorityAreas.push({ center: [x, y], radius: r });
-                renderPriorityAreas();
-                
-                // Reset inputs for convenience
-                paXInput.value = Math.floor(Math.random() * 50);
-                paYInput.value = Math.floor(Math.random() * 50);
-                paRInput.value = 5;
+                sensors.forEach((s, i) => {
+                    const row = document.createElement('div');
+                    row.className = 'flex justify-between items-center border-b border-slate-800 pb-1 pt-1 hover:bg-slate-800/50 px-1 rounded transition-colors';
+                    row.innerHTML = `
+                        <span class="text-[10px] text-cyan-600 font-bold">UNIT_${String(i+1).padStart(2,'0')}</span> 
+                        <span class="text-[10px] font-mono text-slate-300">X:${s[0].toFixed(1)} / Y:${s[1].toFixed(1)}</span>
+                    `;
+                    ui.coords.appendChild(row);
+                });
             }
 
-            /**
-             * Removes a priority area when its "Remove" button is clicked
-             * (No change in this function)
-             */
-            function handleRemoveArea(e) {
-                if (e.target.classList.contains('remove-area-btn')) {
-                    const indexToRemove = parseInt(e.target.dataset.index, 10);
-                    priorityAreas = priorityAreas.filter((_, idx) => idx !== indexToRemove);
-                    renderPriorityAreas();
+            // --- Visualization Logic ---
+            function renderVisualization(results = null) {
+                const w = parseFloat(ui.inputs.w.value) || 50;
+                const h = parseFloat(ui.inputs.h.value) || 50;
+                const range = parseFloat(ui.inputs.range.value) || 7;
+                const yFlip = (y) => h - y;
+                
+                ui.svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+                ui.vizContainer.style.aspectRatio = `${w} / ${h}`;
+
+                let svg = `
+                    <defs>
+                        <pattern id="grid" width="${w/10}" height="${h/10}" patternUnits="userSpaceOnUse">
+                            <path d="M ${w/10} 0 L 0 0 0 ${h/10}" fill="none" stroke="#1e293b" stroke-width="0.2"/>
+                        </pattern>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+                            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#grid)" />
+                `;
+
+                // 1. Priority Areas (Faint Rose Zones)
+                priorityAreas.forEach(area => {
+                    svg += `<circle cx="${area.center[0]}" cy="${yFlip(area.center[1])}" r="${area.radius}" 
+                            fill="rgba(244, 63, 94, 0.05)" stroke="#f43f5e" stroke-width="0.2" stroke-dasharray="1,1" opacity="0.6" />`;
+                });
+
+                if (results) {
+                    // 2. Uncovered Targets (Dark Slate dots - background)
+                    results.uncoveredSubTargets.forEach(([x, y]) => {
+                        svg += `<circle cx="${x}" cy="${yFlip(y)}" r="0.25" fill="#334155" />`;
+                    });
+                    
+                    // 3. Sensor Ranges (Faint Indigo Circles)
+                    results.placedSensors.forEach(([x, y]) => {
+                        svg += `<circle cx="${x}" cy="${yFlip(y)}" r="${range}" 
+                                fill="rgba(99, 102, 241, 0.1)" stroke="#6366f1" stroke-width="0.3" opacity="0.8" />`;
+                    });
+
+                    // 4. Covered Targets (Neon Cyan dots - highlight)
+                    results.coveredSubTargets.forEach(([x, y]) => {
+                        svg += `<circle cx="${x}" cy="${yFlip(y)}" r="0.35" fill="#22d3ee" filter="url(#glow)" />`;
+                    });
+
+                    // 5. Sensor Cores (Bright White/Blue Nodes)
+                    results.placedSensors.forEach(([x, y]) => {
+                        svg += `<circle cx="${x}" cy="${yFlip(y)}" r="0.6" fill="#ffffff" stroke="#3b82f6" stroke-width="0.2" filter="url(#glow)"/>`;
+                    });
                 }
+                ui.svg.innerHTML = svg;
             }
+
+            // --- Handlers ---
             
-            /**
-             * Main function to run the optimization
-             * --- THIS IS THE UPDATED FUNCTION ---
-             */
             async function handleSubmit(e) {
                 e.preventDefault();
                 if (isLoading) return;
-
-                setLoading(true);
                 
-                // 1. Collect all parameters into a payload
+                setLoading(true);
+                ui.logs.innerHTML = ''; 
+                ui.banner.classList.add('hidden');
+                appendLog("Initializing Secure Connection...", "highlight");
+
                 const payload = {
-                    width: parseFloat(widthInput.value),
-                    height: parseFloat(heightInput.value),
-                    max_sensors: parseInt(maxSensorsInput.value, 10),
-                    sensor_range: parseFloat(sensorRangeInput.value),
-                    density: parseFloat(densityInput.value),
+                    width: parseFloat(ui.inputs.w.value),
+                    height: parseFloat(ui.inputs.h.value),
+                    max_sensors: parseInt(ui.inputs.max.value),
+                    sensor_range: parseFloat(ui.inputs.range.value),
+                    density: parseFloat(ui.inputs.dens.value),
                     priority_areas: priorityAreas
                 };
 
                 try {
-                    // 2. Call the Flask API
                     const response = await fetch(API_URL, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(payload),
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
                     });
+                    const result = await response.json();
 
-                    // 3. Get the JSON response
-                    const results = await response.json();
+                    if (result.logs) result.logs.forEach(l => appendLog(l));
 
-                    // 4. Check for errors from the server
-                    if (!response.ok) {
-                        // `results.error` comes from `jsonify({"error": ...})` in Flask
-                        throw new Error(results.error || "An unknown server error occurred.");
-                    }
+                    if (!response.ok) throw new Error(result.error || "Unknown Error");
 
-                    // 5. Success! Show the results.
-                    showSuccess(results.status, results.summary);
-                    renderVisualization(results);
+                    appendLog("Visualization Data: RECEIVED", "success");
+                    renderVisualization(result);
+                    updateCoordsList(result.placedSensors);
+                    updateResultsBanner(result); // Show the summary banner
 
                 } catch (err) {
-                    // 6. Handle network errors or server errors
-                    console.error("Optimization Error:", err);
-                    showError(err.message);
-                    renderVisualization(); // Clear any old results
+                    appendLog(`CRITICAL FAILURE: ${err.message}`, "error");
+                    updateResultsBanner(err.message, true); // Show error banner
                 } finally {
-                    // 7. Always re-enable the button
                     setLoading(false);
                 }
             }
-            
-            /**
-             * Renders the SVG visualization
-             * (No change in this function)
-             */
-            function renderVisualization(results = null) {
-                const width = parseFloat(widthInput.value) || 50;
-                const height = parseFloat(heightInput.value) || 50;
-                const sensorRange = parseFloat(sensorRangeInput.value) || 7;
-                
-                // SVG Y-coordinate flip
-                const yFlip = (y) => height - y;
-                
-                // Update SVG viewport
-                vizSvg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-                vizContainer.style.aspectRatio = `${width} / ${height}`;
 
-                let svgContent = '';
+            function setLoading(l) {
+                isLoading = l;
+                ui.btn.disabled = l;
+                ui.btnText.textContent = l ? "PROCESSING..." : "INITIATE OPTIMIZATION";
+                ui.spinner.classList.toggle('hidden', !l);
+            }
 
-                // 1. Background Grid
-                const gridStep = width / 10;
-                svgContent += `
-                    <defs>
-                        <pattern id="grid" width="${gridStep}" height="${gridStep}" patternUnits="userSpaceOnUse">
-                            <path d="M ${gridStep} 0 L 0 0 0 ${gridStep}" fill="none" stroke="#e5e7eb" stroke-width="0.3"/>
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#grid)" opacity="0.7" />
-                    <rect width="100%" height="100%" fill="none" stroke="#9ca3af" stroke-width="0.5" />
-                `;
-
-                // 2. Plot Priority Areas
-                priorityAreas.forEach((area) => {
-                    svgContent += `
-                        <circle
-                            cx="${area.center[0]}"
-                            cy="${yFlip(area.center[1])}"
-                            r="${area.radius}"
-                            fill="rgba(255, 0, 0, 0.1)"
-                            stroke="red"
-                            stroke-width="0.5"
-                            stroke-dasharray="2 2"
-                        />`;
-                });
-
-                // 3. Plot Results (if they exist)
-                if (results) {
-                    // a) Uncovered Sub-Targets
-                    results.uncoveredSubTargets.forEach(([x, y]) => {
-                        svgContent += `<circle cx="${x}" cy="${yFlip(y)}" r="0.5" fill="#ff9999" />`;
-                    });
-                    
-                    // b) Covered Sub-Targets
-                    results.coveredSubTargets.forEach(([x, y]) => {
-                        svgContent += `<circle cx="${x}" cy="${yFlip(y)}" r="0.5" fill="green" />`;
-                    });
-                    
-                    // c) Placed Sensors & their range
-                    results.placedSensors.forEach(([x, y]) => {
-                        svgContent += `
-                            <g>
-                                <circle
-                                    cx="${x}"
-                                    cy="${yFlip(y)}"
-                                    r="${sensorRange}"
-                                    fill="rgba(0, 0, 255, 0.1)"
-                                    stroke="blue"
-                                    stroke-width="0.5"
-                                    stroke-dasharray="2 2"
-                                />
-                                <path
-                                    d="M ${x} ${yFlip(y)} l -1.5 2 l 3 0 z"
-                                    fill="blue"
-                                    stroke="black"
-                                    stroke-width="0.2"
-                                />
-                            </g>`;
-                    });
+            // --- Event Listeners ---
+            document.getElementById('add-area-btn').addEventListener('click', () => {
+                const x = parseFloat(ui.inputs.px.value), y = parseFloat(ui.inputs.py.value), r = parseFloat(ui.inputs.pr.value);
+                if (!isNaN(x) && !isNaN(y) && r > 0) {
+                    priorityAreas.push({ center: [x, y], radius: r });
+                    renderPriorityAreas();
                 }
-                
-                vizSvg.innerHTML = svgContent;
-            }
+            });
 
-            // --- UI HELPER FUNCTIONS ---
-            // (No change in these functions)
-            
-            function setLoading(loading) {
-                isLoading = loading;
-                submitBtn.disabled = loading;
-                if (loading) {
-                    submitBtnText.textContent = "Optimizing...";
-                    submitSpinner.classList.remove('hidden');
-                    errorMessage.classList.add('hidden');
-                    successMessage.classList.add('hidden');
-                } else {
-                    submitBtnText.textContent = "Run Optimization";
-                    submitSpinner.classList.add('hidden');
+            ui.areaList.addEventListener('click', (e) => {
+                if(e.target.classList.contains('remove-area-btn')) {
+                    priorityAreas.splice(parseInt(e.target.dataset.index), 1);
+                    renderPriorityAreas();
                 }
-            }
+            });
             
-            function showError(message) {
-                errorMessage.innerHTML = `<strong>Error:</strong> ${message}`;
-                errorMessage.classList.remove('hidden');
-                successMessage.classList.add('hidden');
-            }
-            
-            function showSuccess(status, summary) {
-                successMessage.innerHTML = `<strong>${status}:</strong> ${summary}`;
-                successMessage.classList.remove('hidden');
-                errorMessage.classList.add('hidden');
-            }
+            ui.form.addEventListener('submit', handleSubmit);
+            ui.inputs.w.addEventListener('change', () => renderVisualization());
+            ui.inputs.h.addEventListener('change', () => renderVisualization());
 
-            // --- INITIALIZATION ---
-            renderPriorityAreas(); // Draw default areas and wire up visualization on load
-            
-            // --- EVENT LISTENERS ---
-            // (No change in these)
-            form.addEventListener('submit', handleSubmit);
-            addAreaBtn.addEventListener('click', handleAddArea);
-            priorityAreasList.addEventListener('click', handleRemoveArea);
-            
-            // Re-draw base visualization if parameters change
-            widthInput.addEventListener('change', () => renderVisualization());
-            heightInput.addEventListener('change', () => renderVisualization());
-
+            // Init
+            renderPriorityAreas();
+            appendLog("System initialized. Standby for target acquisition.");
         });
     </script>
 </body>
